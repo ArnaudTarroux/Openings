@@ -3,7 +3,6 @@
   "description": "Manipulate hours for opening time",
   "keywords": ["calendar", "shop", "openings", "hours"],
   "license": "MIT",
-  "version": "0.0.1",
   "authors": [
     {
       "name": "Arnaud Tarroux",

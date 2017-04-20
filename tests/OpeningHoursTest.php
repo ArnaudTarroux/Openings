@@ -3,6 +3,7 @@
 namespace Strnoar\Openings\Test;
 
 use PHPUnit\Framework\TestCase;
+use Strnoar\Openings\Closed;
 use Strnoar\Openings\Day;
 use Strnoar\Openings\Exceptions\DayAlreadyExistsException;
 use Strnoar\Openings\Opening;
@@ -17,6 +18,10 @@ class OpeningHoursTest extends TestCase
      * @var OpeningHours $openingHours
      */
     protected $openingHours;
+    /**
+     * @var OpeningHours $openingHours
+     */
+    protected $openingHoursWithClosed;
 
     public function setUp()
     {
@@ -24,6 +29,11 @@ class OpeningHoursTest extends TestCase
             new Opening(Day::MONDAY, self::MONDAY_HOURS),
             new Opening(Day::FRIDAY, self::FRIDAY_HOURS)
         ]);
+
+        $this->openingHoursWithClosed = new OpeningHours(
+            [new Opening(Day::MONDAY, self::MONDAY_HOURS)],
+            [new Closed(new \DateTime('2017-04-21 00:00'), new \DateTime('2017-04-21 23:59:59'))]
+        );
     }
 
     public function testDeclareSameDayMuchThanOnce()
@@ -77,5 +87,18 @@ class OpeningHoursTest extends TestCase
         $notOpened = $this->openingHours->isOpenOnDatetime(new \DateTime('2017-04-20 09:00'));
         $this->assertTrue($opened);
         $this->assertFalse($notOpened);
+    }
+
+    public function testSetClosed()
+    {
+        $this->assertCount(1, $this->openingHoursWithClosed->getClosed());
+    }
+
+    public function testOpenedDayWithClosed()
+    {
+        $mustBeClosed = $this->openingHoursWithClosed->isOpenOnDatetime(new \DateTime('2017-04-21 09:00'));
+        $mustBeOpen = $this->openingHoursWithClosed->isOpenOnDatetime(new \DateTime('2017-04-24 09:00'));
+        $this->assertFalse($mustBeClosed);
+        $this->assertTrue($mustBeOpen);
     }
 }

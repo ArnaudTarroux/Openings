@@ -10,15 +10,24 @@ class OpeningHours
      * @var array $openings
      */
     protected $openings = [];
+    /**
+     * @var array $closed
+     */
+    protected $closed = [];
 
     /**
      * OpeningHours constructor.
      * @param array $openings
+     * @param array $closed
      */
-    public function __construct(array $openings)
+    public function __construct(array $openings, array $closed = null)
     {
         $this->openings = $openings;
         $this->verifyDuplicateDays();
+
+        if (!is_null($closed)) {
+            $this->setClosed($closed);
+        }
     }
 
     /**
@@ -81,10 +90,47 @@ class OpeningHours
      */
     public function isOpenOnDatetime(\DateTime $dateTime): bool
     {
+        if ($this->isClosedDependant($dateTime)) {
+            return false;
+        }
+
         $opening = $this->getOpeningForDay($dateTime->format('l'));
         if ($opening) {
             return $opening->isOpenAt($dateTime);
         }
         return false;
+    }
+
+    /**
+     * @param array $closedDays
+     */
+    private function setClosed(array $closedDays)
+    {
+        foreach ($closedDays as $day) {
+            if (!$day instanceof Closed) {
+                continue;
+            }
+            $this->closed[] = $day;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getClosed(): array
+    {
+        return $this->closed;
+    }
+
+    /**
+     * @param \DateTime $dateTime
+     * @return bool
+     */
+    protected function isClosedDependant(\DateTime $dateTime): bool
+    {
+        $hasClosedException = array_filter($this->getClosed(), function (Closed $closed) use ($dateTime) {
+            return $closed->isInside($dateTime);
+        });
+        return count($hasClosedException) > 0;
     }
 }

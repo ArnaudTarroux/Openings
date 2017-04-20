@@ -1,0 +1,29 @@
+{
+  "name": "strnoar/openings",
+  "description": "Manipulate hours for opening time",
+  "keywords": ["calendar", "shop", "openings", "hours"],
+  "license": "MIT",
+  "version": "0.0.1",
+  "authors": [
+    {
+      "name": "Arnaud Tarroux",
+      "email": "tar.arnaud@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Strnoar\\Openings\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Strnoar\\Openings\\Test\\": "tests/"
+    }
+  }
+}

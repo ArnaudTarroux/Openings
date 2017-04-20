@@ -83,7 +83,7 @@ class Opening
      */
     public function isOpenAt(\DateTime $time): bool
     {
-        $schedules = array_filter($this->getSlots(), function ($slot) use ($time) {
+        $schedules = array_filter($this->getSlots(), function (Schedule $slot) use ($time) {
             return $time->format('H:i') >= $slot->getStart()->format('H:i') &&
                 $time->format('H:i') <= $slot->getEnd()->format('H:i');
         });

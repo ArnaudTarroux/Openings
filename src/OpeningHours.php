@@ -53,7 +53,7 @@ class OpeningHours
     public function getOpeningForDay($day)
     {
         Day::checkIfIsValidDay($day);
-        $opening = array_filter($this->openings, function ($opening) use ($day) {
+        $opening = array_filter($this->openings, function (Opening $opening) use ($day) {
             return $opening->getDay()->getWeekDay() == strtolower($day);
         });
         return reset($opening);

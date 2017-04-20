@@ -67,25 +67,11 @@ class OpeningHours
      */
     public function isOpenForDayAt($day, $time, $timeFormat = 'H:i'): bool
     {
-        Day::checkIfIsValidDay($day);
         $opening = $this->getOpeningForDay($day);
         if ($opening) {
             $time = \DateTime::createFromFormat($timeFormat, $time);
-            return $this->isOpenAt($opening, $time);
+            return $opening->isOpenAt($time);
         }
         return false;
-    }
-
-    /**
-     * @param Opening $opening
-     * @param \DateTime $time
-     * @return bool
-     */
-    private function isOpenAt(Opening $opening, \DateTime $time): bool
-    {
-        $schedules = array_filter($opening->getSlots(), function ($slot) use ($time) {
-            return $time >= $slot->getStart() && $time <= $slot->getEnd();
-        });
-        return !empty($schedules);
     }
 }

@@ -54,7 +54,7 @@ class Day
      */
     public static function exists(string $day): bool
     {
-        return in_array($day, self::listDays());
+        return in_array(strtolower($day), self::listDays());
     }
 
     /**
@@ -63,6 +63,7 @@ class Day
      */
     public static function checkIfIsValidDay(string $day)
     {
+        $day = strtolower($day);
         if (!self::exists($day)) {
             throw new DayDoesNotExistsException(sprintf("%s is not a valid day", $day));
         }

@@ -70,4 +70,12 @@ class OpeningHoursTest extends TestCase
         $this->assertTrue($validOpened);
         $this->assertFalse($invalidOpened);
     }
+
+    public function testCheckIsOpenOnDatetime()
+    {
+        $opened = $this->openingHours->isOpenOnDatetime(new \DateTime('2017-04-21 09:00'));
+        $notOpened = $this->openingHours->isOpenOnDatetime(new \DateTime('2017-04-20 09:00'));
+        $this->assertTrue($opened);
+        $this->assertFalse($notOpened);
+    }
 }

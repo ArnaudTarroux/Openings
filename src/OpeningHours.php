@@ -54,7 +54,7 @@ class OpeningHours
     {
         Day::checkIfIsValidDay($day);
         $opening = array_filter($this->openings, function ($opening) use ($day) {
-            return $opening->getDay()->getWeekDay() == $day;
+            return $opening->getDay()->getWeekDay() == strtolower($day);
         });
         return reset($opening);
     }
@@ -71,6 +71,19 @@ class OpeningHours
         if ($opening) {
             $time = \DateTime::createFromFormat($timeFormat, $time);
             return $opening->isOpenAt($time);
+        }
+        return false;
+    }
+
+    /**
+     * @param \DateTime $dateTime
+     * @return bool
+     */
+    public function isOpenOnDatetime(\DateTime $dateTime): bool
+    {
+        $opening = $this->getOpeningForDay($dateTime->format('l'));
+        if ($opening) {
+            return $opening->isOpenAt($dateTime);
         }
         return false;
     }
